@@ -16,8 +16,8 @@
 
 **consumerProguardFiles配置 :** 在Android项目的构建配置中，`consumerProguardFiles`是一个关键的配置项，它用于指定发布AAR（Android Archive）依赖库时所附带的混淆规则文件。以下是对这一配置的详细说明：
 
-1. **AAR****内嵌混淆规则**：此配置允许开发者在AAR库中嵌入专门的ProGuard规则文件。这些规则文件将直接包含在发布的AAR包内，确保了库的混淆规则与库本身一同分发。
-2. **应用程序项目****继承****规则**：当其他应用程序项目依赖于这个AAR时，如果该项目启用了ProGuard或R8进行代码混淆，它将自动继承并应用这些预设的ProGuard规则。这样可以保证AAR库在最终的应用中以预期的方式进行混淆。
+1. **AAR内嵌混淆规则**：此配置允许开发者在AAR库中嵌入专门的ProGuard规则文件。这些规则文件将直接包含在发布的AAR包内，确保了库的混淆规则与库本身一同分发。
+2. **应用程序项目继承规则**：当其他应用程序项目依赖于这个AAR时，如果该项目启用了ProGuard或R8进行代码混淆，它将自动继承并应用这些预设的ProGuard规则。这样可以保证AAR库在最终的应用中以预期的方式进行混淆。
 3. **定制化混淆与排除**：通过`consumerProguardFiles`配置，库开发者可以精确地指定哪些代码应该被保留（例如，公开的API或者需要暴露给其他应用的组件），以及哪些代码可以被安全地删除或混淆。这为库的发布提供了更高级别的定制化和控制。
 4. **项目类型的适用性**：需要注意的是，`consumerProguardFiles`配置仅适用于库项目（如AAR或JAR），并不适用于普通的应用程序项目。在应用程序项目中，这一配置将被忽略，开发者需要在应用的构建配置中直接管理混淆规则。
 
@@ -265,7 +265,9 @@ proguard-android-optimize.txt 与 proguard-android.txt 的差别不大。
     public static int e(...);
 }
 
-
+#本库的混淆
+#不混淆某个包所有的类
+-keep class com.example.testdemo.bean.** { *; }
 
 #############################################
 #
@@ -313,27 +315,4 @@ proguard-android-optimize.txt 与 proguard-android.txt 的差别不大。
 # You can specify any path and filename.
 -printconfiguration ../tmp/full-r8-config.txt
 #混淆命令 gradlew makeJar
-
-#本库的混淆
-#不混淆某个包所有的类
--keep class com.example.testdemo.bean.** { *; }
-
-#三方库的混淆
-# 广告sdk
--keep,allowshrinking class com.hihonor.adsdk.video.**{*;}
--keep,allowshrinking class com.hihonor.adsdk.base.**{*;}
--keep,allowshrinking class com.hihonor.adsdk.banner.**{*;}
--keep,allowshrinking class com.hihonor.adsdk.intersititial.**{*;}
--keep,allowshrinking class com.hihonor.adsdk.reward.**{*;}
--keep,allowshrinking class com.hihonor.adsdk.picturetextad.**{*;}
--keep,allowshrinking class com.hihonor.adsdk.uikit.**{*;}
--keep,allowshrinking class com.hihonor.adsdk.splash.**{*;}
-# 荣耀库
--keep,allowshrinking class com.hihonor.hianalytics.**{*;}
--keep,allowshrinking class com.hihonor.updater.**{*;}
--keep,allowshrinking class com.hihonor.secure.android.common.encrypt.**{*;}
--keep,allowshrinking class com.hihonor.secure.android.common.ssl.**{*;}
--keep,allowshrinking class com.hihonor.ads.identifier.**{*;}
--keep,allowshrinking class com.hihonor.dlinstall.**{*;}
-#-keep class com.alibaba.f/stjson{*; }
 ```
