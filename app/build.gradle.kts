@@ -4,6 +4,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("keyStore") {
+            storeFile = file("..\\keystore.jks")
+            storePassword = "123456"
+            keyAlias = "aaa"
+            keyPassword = "123456"
+        }
+    }
     namespace = "com.yuanxiaocai.androidproguard"
     compileSdk = 34
 
@@ -18,6 +26,7 @@ android {
     }
 
     buildTypes {
+        val signConfig = signingConfigs.getByName("keyStore")
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
@@ -25,6 +34,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signConfig
         }
         release {
             isMinifyEnabled = true
@@ -33,6 +43,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signConfig
         }
     }
     compileOptions {

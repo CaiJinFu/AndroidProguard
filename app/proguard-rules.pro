@@ -28,15 +28,17 @@
 
 ####################基本混淆指令的设置####################
 #不混淆指定的包名。有多个包名可以用逗号隔开。包名可以包含 ？、*、** 通配符，还可以在包名前加上 ! 否定符。只有开启混淆时可用。如果你使用了 mypackage.MyCalss.class.getResource(""); 这些代码获取类目录的代码，就会出现问题。需要使用 -keeppackagenames 保留包名。
--keeppackagenames com.example.testdemo
+-keeppackagenames com.yuanxiaocai.androidproguard
 #指定类、方法及字段混淆后时用的混淆字典。默认使用 ‘a’，’b’ 等短名称作为混淆后的名称。
 -obfuscationdictionary dictionary.txt
 # 打印 usage
--printusage usage.txt
+-printusage ../mapping/usage.txt
 # 打印 mapping
--printmapping mapping.txt
+-printmapping ../mapping/mapping.txt
 # 打印 seeds
--printseeds seeds.txt
+-printseeds ../mapping/seeds.txt
+# 打印 configuration
+-printconfiguration ../mapping/configuration
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
@@ -76,6 +78,14 @@
 -keep public class * extends android.support.v4.**
 -keep public class * extends android.support.v7.**
 -keep public class * extends android.support.annotation.**
+# AndroidX混淆
+-keep class com.google.android.material.** {*;}
+-keep class androidx.** {*;}
+-keep public class * extends androidx.**
+-keep interface androidx.** {*;}
+-dontwarn com.google.android.material.**
+-dontnote com.google.android.material.**
+-dontwarn androidx.**
 # 保留R下面的资源
 -keep class **.R$* {*;}
 # 保留本地native方法不被混淆
@@ -179,8 +189,6 @@
 }
 # Glide图片库
 -keep class com.bumptech.glide.**{*;}
-# You can specify any path and filename.
--printconfiguration ../tmp/full-r8-config.txt
 #混淆命令 gradlew makeJar
 #本库的混淆
 #不混淆某个包所有的类
