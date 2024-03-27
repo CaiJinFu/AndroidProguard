@@ -165,7 +165,7 @@
 -keep class sun.misc.Unsafe { *; }
 -keep class com.idea.fifaalarmclock.entity.***
 -keep class com.google.gson.stream.** { *; }
--keep class com.你的bean.** { *; }
+#-keep class com.你的bean.** { *; }
 # OkHttp3
 -dontwarn okhttp3.logging.**
 -keep class okhttp3.internal.**{*;}
