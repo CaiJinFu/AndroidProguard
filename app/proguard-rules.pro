@@ -130,17 +130,6 @@
     void *(**On*Event);
     void *(**On*Listener);
 }
-# webView的混淆处理
--keepclassmembers class fqcn.of.javascript.interface.for.webview {
-    public *;
-}
--keepclassmembers class * extends android.webkit.webViewClient {
-    public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
-    public boolean *(android.webkit.WebView, java.lang.String);
-}
--keepclassmembers class * extends android.webkit.webViewClient {
-    public void *(android.webkit.webView, jav.lang.String);
-}
 #############################################
 #
 # 自定义的混淆配置（根据项目需求进行定义）
@@ -160,12 +149,6 @@
 # 第三方库的混淆配置（根据第三方库官网添加混淆代码）
 #
 #############################################
-# Gson
--keepattributes *Annotation*
--keep class sun.misc.Unsafe { *; }
--keep class com.idea.fifaalarmclock.entity.***
--keep class com.google.gson.stream.** { *; }
-#-keep class com.你的bean.** { *; }
 # OkHttp3
 -dontwarn okhttp3.logging.**
 -keep class okhttp3.internal.**{*;}
@@ -181,15 +164,11 @@
     long producerIndex;
     long consumerIndex;
 }
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
 # Glide图片库
 -keep class com.bumptech.glide.**{*;}
 #混淆命令 gradlew makeJar
 #本库的混淆
+#保持BuildConfig不被混淆(因为混淆之后就无法在导出jar时排除该类)
+-keep class com.yuanxiaocai.androidproguard.BuildConfig{ *; }
 #不混淆某个包所有的类
 -keep class com.yuanxiaocai.androidproguard.bean.** { *; }
