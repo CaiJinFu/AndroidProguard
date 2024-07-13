@@ -31,4 +31,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndroidProguard"
 include(":app")
- 
