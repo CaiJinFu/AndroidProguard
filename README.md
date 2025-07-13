@@ -1,13 +1,12 @@
-
 # **ProGuard 工作流程**
 
 ProGuard工作过程包括四个步骤：`shrink`，`optimize`，`obfuscate`，`preverigy`。这四个步骤都是可选，**但是顺序都是不变的**。
 
-![img](https://img-blog.csdnimg.cn/img_convert/e65ee523736a2fa0f6a16dad545b240b.png)
+![img](https://i-blog.csdnimg.cn/blog_migrate/a36d5ebd90cb1186f6878d100f8508fb.png)
 
 **shrink**：检测并删除项目中未使用到的类，字段，方法以及属性。
 
-**optimize**：优化字节码，移除无用指令，或者进行指令优化。（R8优化工具不提供关闭优化的选项，同时也不支持对优化行为进行自定义修改。因此，尝试在配置中使用`-dontoptimize`指令是无效的，该指令不会被R8识别或执行。）
+**optimize**：优化[字节码](https://so.csdn.net/so/search?q=%E5%AD%97%E8%8A%82%E7%A0%81&spm=1001.2101.3001.7020)，移除无用指令，或者进行指令优化。（R8优化工具不提供关闭优化的选项，同时也不支持对优化行为进行自定义修改。因此，尝试在配置中使用`-dontoptimize`指令是无效的，该指令不会被R8识别或执行。）
 
 **obfuscate**：代码混淆，将代码中的类，字段，方法和属性等名称使用无意义的名称进行表示，减少代码反编译后的可读性。
 
@@ -17,12 +16,12 @@ ProGuard工作过程包括四个步骤：`shrink`，`optimize`，`obfuscate`，`
 
 部分编译流程如下图所示：
 
-- **R8 将脱糖（Desugar）、压缩、优化、混淆和 dex（D8 编译器）整合到一个步骤**
-- R8 对 .class 文件执行代码压缩、优化与混淆
-- D8 编译器执行脱糖，并将 .class 文件转换为 .dex文件
+* **R8 将脱糖（Desugar）、压缩、优化、混淆和 dex（D8 编译器）整合到一个步骤**
+* R8 对 .class 文件执行代码压缩、优化与混淆
+* D8 编译器执行脱糖，并将 .class 文件转换为 .dex文件
 
-![img](https://img-blog.csdnimg.cn/img_convert/138727579c206fa95cf71cfb4f873997.png)
-对比以下 ProGuard 与 R8 ：
+![img](https://i-blog.csdnimg.cn/blog_migrate/5712383822b40bb831303216525257ab.png)
+ 对比以下 ProGuard 与 R8 ：
 
 **共同点：**
 
@@ -36,11 +35,16 @@ ProGuard工作过程包括四个步骤：`shrink`，`optimize`，`obfuscate`，`
 2. R8 将脱糖（Desugar）、压缩、优化、混淆和 dex（D8 编译器）整合到**一个步骤**中，显著提高了编译性能
 
 # Android编译打包
+
 ## 编译打包总体流程
-![在这里插入图片描述](https://img-blog.csdnimg.cn/direct/9d74243a0e1041d481a2badf1500a386.png)
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/877e2d07aef6d6cdb394f1e373562943.png)
+
 ## 编译打包主要步骤
-![img](https://img-blog.csdnimg.cn/img_convert/421116be91ab218718cd7af45224711d.png)
-整个打包流程，总共分为7个步骤。
+
+![img](https://i-blog.csdnimg.cn/blog_migrate/9194f9b14fd78dfdc9b872111b179327.png)
+ 整个打包流程，总共分为7个步骤。
+
 1. 打包资源文件，生成R.java文件
 2. 处理aidl文件，生成相应的.Java文件
 3. 编译项目源代码，生成class文件
@@ -54,27 +58,29 @@ ProGuard工作过程包括四个步骤：`shrink`，`optimize`，`obfuscate`，`
 AAPT2（Android Asset Packaging Tool2）是一种构建工具，Android Studio 和 Android Gradle 插件使用它来编译和打包应用的资源。AAPT2 会解析资源、为资源编制索引，并将资源编译为针对 Android 平台进行过优化的二进制格式。
 
 AGP3.0.0 之后默认通过 AAPT2 来编译资源， 支持通过启用增量编译实现更快的资源编译。这是通过将资源处理拆分为两个步骤来实现的：
+
 1. 编译：将资源文件编译为二进制格式。
-   把所有的 Android 资源文件进行解析，生成扩展名为。flat 的二进制文件。比如是 png 图片，那么就会被压缩处理，采用。png.flat 的扩展名。可以在 build/intermediates/merged_res/文件下查看生成的中间产物。
+    把所有的 Android 资源文件进行解析，生成扩展名为。flat 的二进制文件。比如是 png 图片，那么就会被压缩处理，采用。png.flat 的扩展名。可以在 build/intermediates/merged\_res/文件下查看生成的中间产物。
 2. 链接：合并所有已编译的文件并将它们打包到一个软件包中。
-   首先，这一步会生成辅助文件，比如 R.java 与 resources.arsc，R 文件大家应该都比较熟悉，就是一个资源索引文件，我们平时引用也都是通过 R。的方式引用资源 id。而 resources.arsc 则是资源索引表，供在程序运行时根据 id 索引到具体的资源。最后会将 R 文件，ressources.arsc 文件和之前的二进制文件进行打包，打包到一个软件包中。
+    首先，这一步会生成辅助文件，比如 R.java 与 resources.arsc，R 文件大家应该都比较熟悉，就是一个资源索引文件，我们平时引用也都是通过 R。的方式引用资源 id。而 resources.arsc 则是资源索引表，供在程序运行时根据 id 索引到具体的资源。最后会将 R 文件，ressources.arsc 文件和之前的二进制文件进行打包，打包到一个软件包中。
 
 这种拆分方式有助于提高增量编译的性能。例如，如果某个文件中有更改，您只需要重新编译该文件。
 
 **AAPT2 会根据对应用清单中的类、布局及其他应用资源的引用，生成保留规则**。例如，AAPT2 会为您在应用清单中注册为入口点的每个 activity 添加一个保留规则。
+
 # **组件化混淆**
 
 在组件化的项目中，需要注意应用 Module 和 Library Module 的行为差异和组件化的资源汇合规则，总结为以下几个重点：
 
-- 编译时会依次对各层 Library Module进行编译，最底层的 Base Module 会最先被编译为 aar 文件，然后上一层编译时会将依赖 Module 输出的 aar 文件/ jar 文件解压到模块的 build 中相应的文件夹中
-- App Module 这一层汇总了全部的 aar 文件后，才真正开始编译操作
-- 后编译的 Module 会覆盖之前编译的 Module 中的同名资源
+* 编译时会依次对各层 Library Module进行编译，最底层的 Base Module 会最先被编译为 aar 文件，然后上一层编译时会将依赖 Module 输出的 aar 文件/ jar 文件解压到模块的 build 中相应的文件夹中
+* App Module 这一层汇总了全部的 aar 文件后，才真正开始编译操作
+* 后编译的 Module 会覆盖之前编译的 Module 中的同名资源
 
-![img](https://img-blog.csdnimg.cn/img_convert/8baf4949061ed58afac30ea5da1678bc.png)
+![img](https://i-blog.csdnimg.cn/blog_migrate/98dbd93c4acf1b1b86a82eebfbd81d21.png)
 
 使用较高版本的 Android Gradle Plugin，不会将汇总的资源放置在 `exploded-aar`文件夹。即便如此，Lib Module 的资源汇总到 App Module 的规则是一样的。
 
-**混淆开启由 App Module 决定， 与Lib Module 无关。**专属的混淆规则设置到 Lib Module 的`proguard-rules.pro`，设置的混淆规则是不生效的。为了让规则生效，还需要在 Lib Module 的`build.gradle`中添加以下配置：
+混淆开启由 App Module 决定， 与Lib Module 无关。专属的混淆规则设置到 Lib Module 的`proguard-rules.pro`，设置的混淆规则是不生效的。为了让规则生效，还需要在 Lib Module 的`build.gradle`中添加以下配置：
 
 ```Groovy
 ...
@@ -102,24 +108,24 @@ android {
 
 代码混淆是将代码转换成难以阅读和理解的形式，以保护源代码和减少应用体积的过程。以下是Android开发中常用的混淆配置文件及其作用：
 
-- **proguard-android.txt：**这是默认的混淆规则集，位于`ANDROID_SDK\tools\proguard`目录。它提供了基本的代码混淆和优化设置。
-- **proguard-android-optimize.txt：**此文件包含进一步压缩代码的混淆规则，虽然能更有效地减小应用体积，但处理时间较长，同样位于`ANDROID_SDK\tools\proguard`目录。
-- **proguard-rules.pro：**用户自定义的混淆规则文件，可以根据项目需求进行调整。
-- **usage.txt：**记录了在混淆过程中被删除的类、方法和字段。
-- **mapping.txt：**存储了混淆前后的类名、方法名和字段名的映射信息，对于错误追踪和调试至关重要。
-- **seeds.txt：**包含了被Keep规则保留的类、方法和字段，用于验证Keep规则的正确性。
-- **configuration.tx：**配置的所有的混淆规则，在目录`app/build/outputs/mapping/release/configuration.txt`
-- **consumer-rules.pro**：用于指定发布AAR（Android Archive）依赖库时所附带的混淆规则文件。
-- **aapt_rules.txt**：使用 `minifyEnabled true` 构建项目后会在以下目录生成：`<module-dir>/build/intermediates/proguard-rules/debug/aapt_rules.txt`。AAPT2 会根据对应用清单中的类、布局及其他应用资源的引用，生成保留规则。例如，AAPT2 会为您在应用清单中注册为入口点的每个 activity 添加一个保留规则。
+* **proguard-android.txt**：这是默认的混淆规则集，位于`ANDROID_SDK\tools\proguard`目录。它提供了基本的代码混淆和优化设置。
+* **proguard-android-optimize.txt**：此文件包含进一步压缩代码的混淆规则，虽然能更有效地减小应用体积，但处理时间较长，同样位于`ANDROID_SDK\tools\proguard`目录。
+* **proguard-rules.pro**：用户自定义的混淆规则文件，可以根据项目需求进行调整。
+* **usage.txt**：记录了在混淆过程中被删除的类、方法和字段。
+* **mapping.txt**：存储了混淆前后的类名、方法名和字段名的映射信息，对于错误追踪和调试至关重要。
+* **seeds.txt**：包含了被Keep规则保留的类、方法和字段，用于验证Keep规则的正确性。
+* **configuration.tx**：配置的所有的混淆规则，在目录`app/build/outputs/mapping/release/configuration.txt`
+* **consumer-rules.pro**：用于指定发布AAR（Android Archive）依赖库时所附带的混淆规则文件。
+* **aapt_rules.txt**：使用 `minifyEnabled true` 构建项目后会在以下目录生成：`<module-dir>/build/intermediates/proguard-rules/debug/aapt_rules.txt`。AAPT2 会根据对应用清单中的类、布局及其他应用资源的引用，生成保留规则。例如，AAPT2 会为您在应用清单中注册为入口点的每个 activity 添加一个保留规则。
 
 # **示例配置文件内容**
 
 ## consumer-rules.pro
 
-**consumerProguardFiles 配置 :** 在 Android 项目的构建配置中，`consumerProguardFiles`是一个关键的配置项，它用于指定发布 AAR（Android Archive）依赖库时所附带的混淆规则文件。以下是对这一配置的详细说明：
+**consumerProguardFiles 配置 :**  在 Android 项目的构建配置中，`consumerProguardFiles`是一个关键的配置项，它用于指定发布 AAR（Android Archive）依赖库时所附带的混淆规则文件。以下是对这一配置的详细说明：
 
 1. **AAR** **内嵌混淆规则**：此配置允许开发者在 AAR 库中嵌入专门的 ProGuard 规则文件。这些规则文件将直接包含在发布的 AAR 包内，确保了库的混淆规则与库本身一同分发。
-2. **应用程序项目****继承****规则**：当其他应用程序项目依赖于这个 AAR 时，如果该项目启用了 ProGuard 或 R8 进行代码混淆，它将自动继承并应用这些预设的 ProGuard 规则。这样可以保证 AAR 库在最终的应用中以预期的方式进行混淆。
+2. **应用程序项目继承规则**：当其他应用程序项目依赖于这个 AAR 时，如果该项目启用了 ProGuard 或 R8 进行代码混淆，它将自动继承并应用这些预设的 ProGuard 规则。这样可以保证 AAR 库在最终的应用中以预期的方式进行混淆。
 3. **定制化混淆与排除**：通过`consumerProguardFiles`配置，库开发者可以精确地指定哪些代码应该被保留（例如，公开的 API 或者需要暴露给其他应用的组件），以及哪些代码可以被安全地删除或混淆。这为库的发布提供了更高级别的定制化和控制。
 4. **项目类型的适用性**：需要注意的是，`consumerProguardFiles`配置仅适用于库项目（如 AAR 或 JAR），并不适用于普通的应用程序项目。在应用程序项目中，这一配置将被忽略，开发者需要在应用的构建配置中直接管理混淆规则。
 
@@ -193,7 +199,7 @@ defaultConfig {
 
 ## **proguard-android-optimize.txt**
 
-proguard-android-optimize.txt 与 proguard-android.txt 的差别不大。
+proguard-android-[optimize](https://so.csdn.net/so/search?q=optimize&spm=1001.2101.3001.7020).txt 与 proguard-android.txt 的差别不大。
 
 ```Java
 // 删除了关闭优化指令
@@ -332,14 +338,10 @@ proguard-android-optimize.txt 与 proguard-android.txt 的差别不大。
 # 自定义的混淆配置（根据项目需求进行定义）
 #
 #############################################
-# 不混淆log
+# -assumenosideeffects：告诉混淆器这些方法没有副作用，可以删除它们的调用。删除log.d的日志
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
-    public static int v(...);
-    public static int i(...);
-    public static int w(...);
     public static int d(...);
-    public static int e(...);
 }
 #############################################
 #
@@ -381,9 +383,31 @@ proguard-android-optimize.txt 与 proguard-android.txt 的差别不大。
 -keep class com.yuanxiaocai.androidproguard.bean.** { *; }
 ```
 
-参考来源：
+# 注意事项
 
-[R8 retrace  | Android Studio  | Android Developers](https://developer.android.google.cn/tools/retrace?hl=en)
+`-allowaccessmodification`：允许混淆器在优化代码时修改类、字段和方法的访问修饰符。这意味着混淆器可以将类的访问修饰符从 private 修改为 protected 或 public，或者进行其他必要的修改，以便于进一步优化和缩小代码。
+
+若启用此选项，将会使不具备修饰符的方法或成员变量转变为具有修饰符的方法或变量，具体情况如下：
+
+未添加`-allowaccessmodification`混淆规则：
+
+```Java
+void test() {
+}
+```
+
+添加`-allowaccessmodification` 混淆规则：
+
+```Java
+public void test() {
+}
+```
+
+将会自动添加 `public` 修饰符。
+
+# 参考来源：
+
+[R8 retrace | Android Studio | Android Developers](https://developer.android.google.cn/tools/retrace?hl=en)
 
 [Gradle 系列（9）代码混淆到底做了什么？ - 掘金](https://juejin.cn/post/6930648501311242248)
 

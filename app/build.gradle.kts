@@ -33,7 +33,8 @@ android {
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
+                file("proguard-rules-generated.pro")
             )
             signingConfig = signConfig
         }
@@ -42,7 +43,8 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
+                file("proguard-rules-generated.pro")
             )
             signingConfig = signConfig
         }
@@ -57,6 +59,26 @@ android {
     buildFeatures {
         viewBinding = true
     }
+}
+val proguardSource = file("proguard-rules-base.pro")
+val proguardTarget = file("proguard-rules-generated.pro")
+val generateProguardRules by tasks.registering {
+    doLast {
+        println("➡️ 正在生成混淆规则...")
+        // 正则规则，删除以 `-keep class com.example.debug.` 开头的规则
+        val deleteRegex = Regex("""^-keep class com\.example\.debug\..*\{.*\}$""")
+        // 过滤行
+        val filteredLines = proguardSource.readLines()
+            .filterNot { it.trim().matches(deleteRegex) }
+        // 写入目标文件
+        proguardTarget.writeText(filteredLines.joinToString("\n"))
+
+        println("✅ 生成完成，已写入到 ${proguardTarget.absolutePath}")
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn(generateProguardRules)
 }
 
 dependencies {

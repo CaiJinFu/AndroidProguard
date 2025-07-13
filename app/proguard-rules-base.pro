@@ -1,0 +1,2 @@
+-keep class com.example.debug.** { *; }
+-keep class com.example.keepme.** { *; }
