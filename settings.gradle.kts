@@ -31,3 +31,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndroidProguard"
 include(":app")
+include(":libs")
