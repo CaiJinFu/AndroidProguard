@@ -86,6 +86,14 @@
 -dontwarn com.google.android.material.**
 -dontnote com.google.android.material.**
 -dontwarn androidx.**
+# 保留所有 ViewBinding 类
+-keep class * implements androidx.viewbinding.ViewBinding {
+    *;
+}
+-keep class * extends androidx.viewbinding.ViewBinding {
+    public static final ** inflate(**);
+    public static * bind(android.view.View);
+}
 # 保留R下面的资源
 -keep class **.R$* {*;}
 # 保留本地native方法不被混淆
